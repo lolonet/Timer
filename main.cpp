@@ -45,10 +45,10 @@ int main(int argc, char *argv[])
 	const int minEpollTime = 1000;			// 1000 msec
 	while(true)
 	{
-		const int n = epoll_wait(epfd, events, sizeof(events)/sizeof(epoll_event), minEpollTime);
+		epoll_wait(epfd, events, sizeof(events)/sizeof(epoll_event), minEpollTime);
 		timeCtl.CheckExpire();
 
-		cout<<" contral list " << timeCtl.m_SameTimerList.size() <<" contral queue " << timeCtl.m_TimerQueue.size() <<endl;
+		cout<<" contral list " << timeCtl.GetTimerListSize() <<" contral queue " << timeCtl.GetTimerQueueSize() <<endl;
 
 	}
 

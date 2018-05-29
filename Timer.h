@@ -30,8 +30,10 @@ public:
 	int StopTimer(void);
 	int StartTimer(int timeout, TimerCallback *func);
 	int TimeOutNotify(void);
+	int GetTimeOut(void);
+	int GetTimeId(void);
 
-public:
+private:
 	int m_timeid;
 	int m_timeout;
 	TimerCallback *m_func;
@@ -47,9 +49,11 @@ public:
 	int StartTimer(int timeid, int timeout, TimerCallback *func);
 	TimerObject* GetTimerObj(int timeid);
 
-public:
+private:
 	map<int, TimerObject*> m_timerMap;		
 	TimerContraller *m_pTimeContraller;			// 关联定时器轮询对象
+
+	friend TimerObject;							// Timer 管理很多TimeObjcet，赋予控制权 
 };
 
 
@@ -61,15 +65,16 @@ public:
 	int RegisterTimer(TimerObject *pTimerObj);
 	int DeleteTimer(TimerObject *pTimerObj);
 	int CheckExpire(void);
+	int GetTimerListSize(void);
+	int GetTimerQueueSize(void);
 
 public:
 	static int64 GetTimeStamp(void);
 	static int64 TransToTimeStamp(int afterTime);
 
-public:
+private:
 	map<int64, list<TimerObject*> > m_SameTimerList;									// 绝对时间关联的同一时间列表
 	priority_queue<int64, vector<int64>, std::greater<int64> > m_TimerQueue;			// 最小堆处理
-
 };
 
 

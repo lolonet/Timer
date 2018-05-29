@@ -37,6 +37,16 @@ int TimerObject::TimeOutNotify(void)
 	return 0;
 }
 
+int TimerObject::GetTimeOut(void)
+{
+	return m_timeout;
+}
+
+int TimerObject::GetTimeId(void)
+{
+	return m_timeid;
+}
+
 ////////////////////////////////////////////////////////////////////
 
 TimerObject* Timer::GetTimerObj(int timeid)
@@ -78,7 +88,7 @@ int TimerContraller::RegisterTimer(TimerObject *pTimerObj)
 	if (pTimerObj == NULL)
 		return -1;
 
-	const int64 timeout = TimerContraller::TransToTimeStamp(pTimerObj->m_timeout);
+	const int64 timeout = TimerContraller::TransToTimeStamp(pTimerObj->GetTimeOut());
 	m_TimerQueue.push(timeout);
 	m_SameTimerList[timeout].push_back(pTimerObj);
 	return 0;
@@ -86,7 +96,7 @@ int TimerContraller::RegisterTimer(TimerObject *pTimerObj)
 
 int TimerContraller::DeleteTimer(TimerObject *pTimerObj)
 {
-	const int64 timeout = TimerContraller::TransToTimeStamp(pTimerObj->m_timeout);
+	const int64 timeout = TimerContraller::TransToTimeStamp(pTimerObj->GetTimeOut());
 	map<int64, list<TimerObject*> >::iterator itList = m_SameTimerList.find(timeout);
 	if (itList == m_SameTimerList.end())
 		return 0;
@@ -138,4 +148,14 @@ int TimerContraller::CheckExpire(void)
 	}
 
 	return 0;
+}
+
+int TimerContraller::GetTimerListSize(void)
+{
+	return (int)m_SameTimerList.size();
+}
+
+int TimerContraller::GetTimerQueueSize(void)
+{
+	return (int)m_TimerQueue.size();
 }
